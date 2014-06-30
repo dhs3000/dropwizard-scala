@@ -1,0 +1,3 @@
+Dropwizard Test using Scala
+==============
+....

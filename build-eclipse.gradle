@@ -1,0 +1,23 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+// Unterschiedliche Output-Ordner für die einzelnen Bereiche, damit z.B. die Test-Klassen nicht mit im Server-Plugin von Eclipse deployed werden
+project.ext {
+	mainSrc='src/main/java'
+	mainRes='src/main/resources'
+	testSrc='src/test/java'
+	testRes='src/test/resources'
+
+	mainOutCls='build/classes/main'
+	mainOutRes='build/resources/main'
+	testOutCls='build/classes/test'
+	testOutRes='build/resources/test'
+}
+
+eclipse.classpath.file.whenMerged { cp ->
+	cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith(mainSrc) }*.output = mainOutCls
+	cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith(testSrc) }*.output = testOutCls
+	cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith(mainRes) }*.output = mainOutRes
+	cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith(testRes) }*.output = testOutRes
+}
+
+eclipseClasspath.doFirst { file('.classpath').delete() }

@@ -1,0 +1,69 @@
+
+// === Plugins
+apply plugin: 'java'
+apply plugin: 'scala'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+apply from: 'build-eclipse.gradle'
+
+sourceCompatibility = 1.7
+
+group = 'de.dennishoersch.dropwizard'
+version = '1.0'
+
+mainClassName = 'de.dennishoersch.dropwizard.contacts.ContactsApplication'
+
+run {
+    args 'server'
+}
+
+// oder: http://www.objectpartners.com/2013/07/16/creating-self-contained-executable-jars-with-gradle-and-shadow/
+jar {
+
+    manifest {
+        attributes "Implementation-Title": project.name
+        attributes "Implementation-Version": version
+        attributes "Main-Class" : mainClassName
+    }
+
+    doFirst {
+        from (configurations.runtime.resolve().collect { it.isDirectory() ? it : zipTree(it) }) {
+            exclude 'META-INF/MANIFEST.MF'
+            exclude 'META-INF/*.SF'
+            exclude 'META-INF/*.DSA'
+            exclude 'META-INF/*.RSA'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+	compile 'org.scala-lang:scala-library:2.11.1'
+
+	def dropwizardVersion = '0.7.1'
+	
+  compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
+  compile "io.dropwizard:dropwizard-auth:$dropwizardVersion"
+	compile "io.dropwizard:dropwizard-views:$dropwizardVersion"
+	compile "io.dropwizard:dropwizard-views-mustache:$dropwizardVersion"
+	
+	compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.4.0-rc2'
+	// https://github.com/erikvanoosten/metrics-scala
+	// compoile 'nl.grons:metrics-scala:3.0.4'
+
+
+	// Logging
+	// (logback implementiert SLF4J)
+	compile 'org.slf4j:jcl-over-slf4j:1.7.7' // für Spring Basis etc, JCL=Commons Logging 
+	compile 'ch.qos.logback:logback-classic:1.1.2'
+
+	testCompile 'junit:junit:4.+'
+	testCompile 'org.scalatest:scalatest_2.11:+'
+	
+}
+
