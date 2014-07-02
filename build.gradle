@@ -15,7 +15,7 @@ version = '1.0'
 mainClassName = 'de.dennishoersch.dropwizard.contacts.ContactsApplication'
 
 run {
-    args 'server'
+    args 'server', 'contacts.yml'
 }
 
 // oder: http://www.objectpartners.com/2013/07/16/creating-self-contained-executable-jars-with-gradle-and-shadow/
