@@ -3,14 +3,15 @@ package de.dennishoersch.dropwizard.contacts
 import de.dennishoersch.dropwizard.contacts.domain.Contact
 import de.dennishoersch.dropwizard.contacts.resources.ContactsResource
 import de.dennishoersch.dropwizard.contacts.service.ContactsService
-import de.dennishoersch.dropwizard.util.dropwizard.ClassRelativeConfigurationSourceProvider
-import de.dennishoersch.dropwizard.util.dropwizard.ScalaApplication
 import io.dropwizard.auth.basic.BasicAuthProvider
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import de.dennishoersch.dropwizard.contacts.domain.User
-import de.dennishoersch.dropwizard.util.dropwizard.ScalaBundle
-import de.dennishoersch.dropwizard.util.dropwizard.RootClasspathConfigurationSourceProvider
+import de.dennishoersch.util.dropwizard.views.thymeleaf.ScalaThymeleafBundle
+import de.dennishoersch.dropwizard.contacts.resources.MainResource
+import de.dennishoersch.util.dropwizard.ScalaBundle
+import de.dennishoersch.util.dropwizard.config.RootClasspathConfigurationSourceProvider
+import de.dennishoersch.util.dropwizard.ScalaApplication
 
 object ContactsApplication extends ScalaApplication[ContactsConfiguration] {
 
@@ -19,6 +20,7 @@ object ContactsApplication extends ScalaApplication[ContactsConfiguration] {
   override def initialize(bootstrap: Bootstrap[ContactsConfiguration]) = {
     bootstrap.setConfigurationSourceProvider(RootClasspathConfigurationSourceProvider)
     bootstrap.addBundle(ScalaBundle)
+    bootstrap.addBundle(ScalaThymeleafBundle)
   }
 
   override def run(configuration: ContactsConfiguration, environment: Environment) = {
@@ -30,6 +32,9 @@ object ContactsApplication extends ScalaApplication[ContactsConfiguration] {
 
     val contactsResource = new ContactsResource
     environment.jersey().register(contactsResource)
+    
+    val mainResource = new MainResource
+    environment.jersey().register(mainResource)
   }
 
   private def setUpContacts(contactsService: ContactsService) = {

@@ -3,7 +3,7 @@ package de.dennishoersch.dropwizard.contacts.resources
 import de.dennishoersch.dropwizard.contacts.domain.Contact
 import de.dennishoersch.dropwizard.contacts.domain.User
 import de.dennishoersch.dropwizard.contacts.service.ContactsService
-import de.dennishoersch.dropwizard.util.resources._
+import de.dennishoersch.util.resources._
 import io.dropwizard.auth.Auth
 import javax.ws.rs.Consumes
 import javax.ws.rs.GET
@@ -28,9 +28,16 @@ class ContactsResource(implicit private val contactsService: ContactsService) {
   @GET
   @Path("{lastname}")
   def byName(@PathParam("lastname") lastname: String): Option[Contact] = {
-    return contactsService.findByLastname(lastname)
+    contactsService.findByLastname(lastname)
   }
 
+  @GET
+  @Path("view/{lastname}")
+  @Produces(Array(MediaType.TEXT_HTML))
+  def viewByName(@PathParam("lastname") lastname: String) = {
+    new ContactView(contactsService.findByLastname(lastname).getOrElse(null))
+  }
+  
   @POST
   @Consumes(Array(MediaType.APPLICATION_JSON))
   def create(contact: Contact, @Context uriInfo: UriInfo): Response = {

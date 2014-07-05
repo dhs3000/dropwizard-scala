@@ -1,4 +1,4 @@
-package de.dennishoersch.dropwizard.util.json
+package de.dennishoersch.util.json
 
 import java.io.ByteArrayOutputStream
 import java.io.IOException

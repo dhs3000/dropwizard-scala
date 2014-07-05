@@ -1,4 +1,4 @@
-package de.dennishoersch.dropwizard.util.dropwizard
+package de.dennishoersch.util.dropwizard
 
 import io.dropwizard.Configuration
 import io.dropwizard.Application

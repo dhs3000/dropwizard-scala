@@ -1,6 +1,15 @@
 
-
 server:
   type: simple
-  applicationContextPath: /service
-  adminContextPath: /dwadmin
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8080
+
+logging:
+  level: INFO
+  loggers:
+    "org.eclipse.jetty": INFO
+    "io.dropwizard": DEBUG
+    "de.dennishoersch": DEBUG
