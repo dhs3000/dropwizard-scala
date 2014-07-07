@@ -4,7 +4,7 @@ import scala.util.Success
 import org.junit.Test
 import org.scalatest.Matchers
 import org.scalatest.junit.AssertionsForJUnit
-import de.dennishoersch.dropwizard.contacts.domain.User
+import de.dennishoersch.dropwizard.blog.domain.User
 import de.dennishoersch.util.test.CustomMatchers
 
 class JsonTest extends AssertionsForJUnit with Matchers with CustomMatchers {
