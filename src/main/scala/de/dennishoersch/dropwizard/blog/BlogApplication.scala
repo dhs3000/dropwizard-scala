@@ -1,6 +1,11 @@
 package de.dennishoersch.dropwizard.blog
 
+import io.dropwizard.auth.basic.BasicAuthProvider
+import io.dropwizard.setup.Bootstrap
+import io.dropwizard.setup.Environment
+
 import de.dennishoersch.dropwizard.blog.auth.UserAuthenticator
+import de.dennishoersch.dropwizard.blog.service.PostsService
 import de.dennishoersch.dropwizard.blog.service.UserService
 import de.dennishoersch.dropwizard.blog.view.controller.IndexController
 import de.dennishoersch.dropwizard.blog.view.controller.PostsController
@@ -8,10 +13,6 @@ import de.dennishoersch.util.dropwizard.ScalaApplication
 import de.dennishoersch.util.dropwizard.ScalaBundle
 import de.dennishoersch.util.dropwizard.config.RootClasspathConfigurationSourceProvider
 import de.dennishoersch.util.dropwizard.views.thymeleaf.ScalaThymeleafBundle
-import io.dropwizard.auth.basic.BasicAuthProvider
-import io.dropwizard.setup.Bootstrap
-import io.dropwizard.setup.Environment
-import de.dennishoersch.dropwizard.blog.service.PostsService
 
 object BlogApplication extends ScalaApplication[BlogConfiguration] {
 

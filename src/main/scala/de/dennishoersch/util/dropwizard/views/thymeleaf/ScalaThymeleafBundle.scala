@@ -1,13 +1,15 @@
 package de.dennishoersch.util.dropwizard.views.thymeleaf
 
-import io.dropwizard.setup.Environment
-import io.dropwizard.Bundle
-import io.dropwizard.setup.Bootstrap
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import io.dropwizard.views.ViewBundle
 import scala.collection.JavaConversions._
-import ognl.OgnlRuntime
+
+import io.dropwizard.Bundle
 import io.dropwizard.assets.AssetsBundle
+import io.dropwizard.setup.Bootstrap
+
+import io.dropwizard.setup.Environment
+import io.dropwizard.views.ViewBundle
+
+import ognl.OgnlRuntime
 
 object ScalaThymeleafBundle extends ScalaThymeleafBundle
 

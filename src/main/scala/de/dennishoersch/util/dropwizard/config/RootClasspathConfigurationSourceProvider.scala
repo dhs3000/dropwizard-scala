@@ -1,7 +1,8 @@
 package de.dennishoersch.util.dropwizard.config
 
-import io.dropwizard.configuration.ConfigurationSourceProvider
 import java.io.InputStream
+
+import io.dropwizard.configuration.ConfigurationSourceProvider
 
 object RootClasspathConfigurationSourceProvider extends RootClasspathConfigurationSourceProvider
 

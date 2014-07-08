@@ -1,18 +1,19 @@
 package de.dennishoersch.util.json
 
 import java.io.ByteArrayOutputStream
-import java.io.IOException
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.module.SimpleModule
+
 import scala.util.Try
-import com.fasterxml.jackson.core.JsonEncoding
-import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.deser.std.StringDeserializer
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.core.JsonParser
+
 import org.apache.commons.lang.StringEscapeUtils
+
+import com.fasterxml.jackson.core.JsonEncoding
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.deser.std.StringDeserializer
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 object Json extends Json 

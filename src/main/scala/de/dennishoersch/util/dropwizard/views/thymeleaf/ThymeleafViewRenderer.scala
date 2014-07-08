@@ -1,16 +1,17 @@
 package de.dennishoersch.util.dropwizard.views.thymeleaf
 
-import io.dropwizard.views.ViewRenderer
-import io.dropwizard.views.View
-import java.util.Locale
 import java.io.OutputStream
-import org.thymeleaf.templatemode.StandardTemplateModeHandlers
-import org.thymeleaf.TemplateEngine
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.io.OutputStreamWriter
-import org.thymeleaf.templateresolver.TemplateResolver
-import org.thymeleaf.resourceresolver.IResourceResolver
+import java.util.Locale
+
+import org.thymeleaf.TemplateEngine
 import org.thymeleaf.TemplateProcessingParameters
+import org.thymeleaf.resourceresolver.IResourceResolver
+import org.thymeleaf.templatemode.StandardTemplateModeHandlers
+import org.thymeleaf.templateresolver.TemplateResolver
+
+import io.dropwizard.views.View
+import io.dropwizard.views.ViewRenderer
 
 private [thymeleaf] object DefaultThymeleafViewRenderer
   extends ThymeleafViewRenderer(StandardTemplateModeHandlers.HTML5.getTemplateModeName(), "/view/templates", ".html")

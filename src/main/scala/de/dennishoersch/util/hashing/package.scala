@@ -1,6 +1,7 @@
 package de.dennishoersch.util
 
 import java.security.MessageDigest
+
 package object hashing {
 
   object Hasher {
