@@ -1,10 +1,9 @@
 package de.dennishoersch.dropwizard.blog.service
 
 import de.dennishoersch.dropwizard.blog.domain.Author
-import de.dennishoersch.dropwizard.blog.domain.Post
-import org.joda.time.DateTime
-import de.dennishoersch.util.time._
 import de.dennishoersch.dropwizard.blog.domain.Categories._
+import de.dennishoersch.dropwizard.blog.domain.Post
+import de.dennishoersch.util.time._
 
 class PostsService {
 
@@ -52,11 +51,22 @@ class PostsService {
                |        </div>
                |    </div>
                |</div>    
-       """.stripMargin, List(Uncategorized)))
+       """.stripMargin, List(Uncategorized)),
+
+    Post(4, authors(0), "01.07.2014 08:51".asDateTime, "Just with me and my crowd", """
+    		   |<p>
+               |  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+    		   |</p>    
+       """.stripMargin, List(Javascript)))
 
   def findAll() = posts
 
-  def findByAuthor(id: Long) = {
-    posts.filter(_.author.id == id)
-  }
+  def findByAuthor(id: Long) = posts.filter(_.author.id == id)
+
+  def findByCategory(name: String) = posts.filter(_.categories.exists(_.name == name))
+
+  def findAllAuthors() = posts.map(_.author).toSet
+
+  def findAllCategories() = posts.flatMap(_.categories).toSet
+
 }
