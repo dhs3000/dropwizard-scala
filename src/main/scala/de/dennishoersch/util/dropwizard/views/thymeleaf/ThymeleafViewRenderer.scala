@@ -4,6 +4,8 @@ import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.util.Locale
 
+import scala.collection.JavaConversions._
+
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.TemplateProcessingParameters
 import org.thymeleaf.resourceresolver.IResourceResolver
@@ -13,12 +15,38 @@ import org.thymeleaf.templateresolver.TemplateResolver
 import io.dropwizard.views.View
 import io.dropwizard.views.ViewRenderer
 
-private [thymeleaf] object DefaultThymeleafViewRenderer
-  extends ThymeleafViewRenderer(StandardTemplateModeHandlers.HTML5.getTemplateModeName(), "/view/templates", ".html")
+private[thymeleaf] object DefaultThymeleafViewRenderer
+  extends ThymeleafViewRenderer(
+    mode = StandardTemplateModeHandlers.HTML5.getTemplateModeName(),
+    prefix = "/view/templates",
+    suffix = ".html",
+    cacheTTLMs = Some(1000 * 60 * 60)
+  )
 
-private [thymeleaf] class ThymeleafViewRenderer(mode: String, prefix: String, suffix: String) extends ViewRenderer {
+private[thymeleaf] class ThymeleafViewRenderer(
+  mode: String,
+  prefix: String,
+  suffix: String,
+  cacheTTLMs: Option[Long] = None)
+  extends ViewRenderer {
 
-  private val templateEngine = createTemplateEngine
+  private val templateEngine = {
+    val engine = new TemplateEngine
+
+    val resolver = new TemplateResolver
+    resolver.setResourceResolver(DirectClassesourceResolver)
+    resolver.setTemplateMode(mode)
+    resolver.setPrefix(prefix)
+    resolver.setSuffix(suffix)
+    if (cacheTTLMs.isDefined) {
+      resolver.setCacheTTLMs(cacheTTLMs.get)
+    }
+
+    engine.setTemplateResolver(resolver)
+    engine.initialize()
+
+    engine
+  }
 
   override def isRenderable(view: View) = view.isInstanceOf[ThymeleafView]
 
@@ -28,24 +56,12 @@ private [thymeleaf] class ThymeleafViewRenderer(mode: String, prefix: String, su
     writer.flush
   }
 
-  private def createTemplateEngine(): TemplateEngine = {
-    val engine = new TemplateEngine
-
-    val resolver = new TemplateResolver
-    resolver.setResourceResolver(new IResourceResolver() {
-      def getName() = "ClassResourceLoader"
-      def getResourceAsStream(templateProcessingParameters: TemplateProcessingParameters, templateName: String) = {
-        this.getClass.getResourceAsStream(templateName)
-      }
-    })
-    resolver.setTemplateMode(mode)
-    resolver.setPrefix(prefix)
-    resolver.setSuffix(suffix)
-    // TODO: Cache time and how to resolve a template as cachable?
-    //resolver.setCacheTTLMs(cacheTTLMs)
-
-    engine.setTemplateResolver(resolver)
-    engine.initialize()
-    engine
+  object DirectClassesourceResolver extends IResourceResolver {
+    def getName() = getClass.getSimpleName
+    def getResourceAsStream(templateProcessingParameters: TemplateProcessingParameters, templateName: String) = {
+      this.getClass.getResourceAsStream(templateName)
+    }
   }
+
 }
+
