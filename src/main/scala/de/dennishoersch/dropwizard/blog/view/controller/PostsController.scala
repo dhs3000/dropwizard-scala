@@ -30,8 +30,7 @@ class PostsController(implicit val postsService: PostsService) {
   @Path("author/{id}")
   def byAuthor(@PathParam("id") id: Long) = {
     val posts = postsService.findByAuthor(id)
-    // FIXME: wenn leer dann kein Author da!
-    new PostsByAuthorView(posts.head.author.name, posts)
+    new PostsByAuthorView(posts.headOption.map(post => post.author.name).getOrElse(""), posts)
   }
 
   @GET
