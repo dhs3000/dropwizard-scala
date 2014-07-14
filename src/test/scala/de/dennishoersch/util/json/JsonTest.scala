@@ -6,6 +6,7 @@ import org.scalatest.Matchers
 import org.scalatest.junit.AssertionsForJUnit
 import de.dennishoersch.dropwizard.blog.domain.Account
 import de.dennishoersch.util.test.CustomMatchers
+import de.dennishoersch.dropwizard.blog.domain.Author
 
 class JsonTest extends AssertionsForJUnit with Matchers with CustomMatchers {
 
@@ -13,7 +14,7 @@ class JsonTest extends AssertionsForJUnit with Matchers with CustomMatchers {
 
   @Test
   def test_simple_stringify() {
-    val obj = Account(2, "Denn", "Mang")
+    val obj = Account(2, "Denn", "Mang", Author(1, "", ""))
     val expected = """{
       |  "name" : "Denn",
       |  "pwd" : "Mang"

@@ -2,10 +2,10 @@ package de.dennishoersch.dropwizard.blog.service
 
 import de.dennishoersch.dropwizard.blog.domain.Account
 import de.dennishoersch.dropwizard.blog.domain.Author
-import de.dennishoersch.dropwizard.blog.domain.Categories._
 import de.dennishoersch.dropwizard.blog.domain.Post
 import de.dennishoersch.util.hashing._
 import de.dennishoersch.util.time._
+import de.dennishoersch.dropwizard.blog.domain.Category._
 
 class DB {
 
