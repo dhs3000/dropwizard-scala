@@ -60,6 +60,7 @@ dependencies {
   compile "io.dropwizard:dropwizard-views:$dropwizardVersion"
 
   compile "org.thymeleaf:thymeleaf:$thymeleafVersion"
+  compile "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:1.2.5"
   
   compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.4.+'
   // https://github.com/erikvanoosten/metrics-scala

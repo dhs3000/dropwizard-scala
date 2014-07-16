@@ -1,29 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head th:replace="/layout :: htmlhead" />
-
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorator="/layout">
+<head>
+  <title>New Post</title>
+</head>
 <body>
 
-<div id="layout" class="pure-g">
-  <div th:replace="/layout :: sidebar" />
-
-  <div class="content pure-u-1 pure-u-md-3-4">
-    <div>
-      <div class="posts">
-        <h1 class="content-subhead">New Post</h1>
-        <form action="/posts" method="post">
-          <label for="title"/>
-          <input id="title" type="text"/>
-          <button type="submit">Send</button>
-        </form>
-      </div>
-
-
-      <div th:replace="/layout :: footer" />
-    </div>
+  <div layout:fragment="content" th:classappend="new-post">
+	  <h1 class="content-subhead">New Post</h1>
+	  <form action="/posts" method="post">
+	    <label for="title">Title</label>
+	    <input id="title" type="text"/>
+	    <button type="submit">Send</button>
+	  </form>
   </div>
-</div>
 
 </body>
 </html>
