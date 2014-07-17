@@ -11,10 +11,21 @@
 
   <div layout:fragment="content" th:classappend="new-post">
 	  <h1 class="content-subhead">New Post</h1>
-	  <form action="/posts" method="post">
-	    <label for="title">Title</label>
-	    <input id="title" type="text"/>
-	    <button type="submit">Send</button>
+	  <form action="/posts" method="post" class="pure-form pure-form-aligned">
+	    <fieldset>
+	      <div class="pure-control-group">
+			    <label for="title">Title</label>
+		      <input id="title" name="title" type="text"/>
+	      </div>
+	      <div class="pure-control-group">
+		      <label for="content">Content</label>
+		      <textarea id="content" name="content"></textarea>
+	      </div>
+	      
+	      <div class="pure-controls">
+		      <button type="submit" class="pure-button pure-button-primary">Send</button>
+		    </div>  
+	    </fieldset>
 	  </form>
   </div>
 
