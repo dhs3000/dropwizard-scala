@@ -7,4 +7,8 @@
 /gradlewJ7
 /bin
 
+.idea
 .cache
+*.iml
+*.ipr
+*.iws
