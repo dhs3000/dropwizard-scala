@@ -15,12 +15,18 @@
 	    <fieldset>
 	      <div class="pure-control-group">
 			    <label for="title">Title</label>
-		      <input id="title" name="title" type="text"/>
+		      <input id="title" name="title" type="text" required="required"/>
 	      </div>
-	      <div class="pure-control-group">
-		      <label for="content">Content</label>
-		      <textarea id="content" name="content"></textarea>
-	      </div>
+        <div class="pure-control-group">
+          <label for="content">Content</label>
+          <textarea id="content" name="content" required="required"></textarea>
+        </div>
+        <div class="pure-control-group">
+          <label for="categories">Categories</label>
+          <select id="categories" name="categories" multiple="multiple">
+            <option th:each="category : ${categories}" th:text="${category}">CAT</option>
+          </select>
+        </div>
 	      
 	      <div class="pure-controls">
 		      <button type="submit" class="pure-button pure-button-primary">Send</button>
