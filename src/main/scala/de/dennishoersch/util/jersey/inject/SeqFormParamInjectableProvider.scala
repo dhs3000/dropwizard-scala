@@ -9,9 +9,9 @@ import com.sun.jersey.core.spi.component.ProviderServices
 import com.sun.jersey.server.impl.model.parameter.multivalued.MultivaluedParameterExtractor
 
 @Provider
-class OptionFormParamInjectableProvider(
+class SeqFormParamInjectableProvider(
   @Context services: ProviderServices)
-  extends AbstractOptionParamInjectableProvider[FormParam](services) {
+  extends AbstractSeqParamInjectableProvider[FormParam](services) {
 
   def createInjectable(extractor: MultivaluedParameterExtractor, parameter: Parameter) = new FormParamInjectable(extractor)
 }

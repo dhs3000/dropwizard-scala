@@ -1,9 +1,13 @@
 package de.dennishoersch.dropwizard.blog
 
-import de.dennishoersch.util.dropwizard.{ScalaApplication, ScalaBundle}
+import de.dennishoersch.dropwizard.blog.auth.AccountAuthenticator
+import de.dennishoersch.dropwizard.blog.service.{AccountService, DB, PostsService}
+import de.dennishoersch.dropwizard.blog.view.controller.{IndexController, PostsController}
 import de.dennishoersch.util.dropwizard.config.RootClasspathConfigurationSourceProvider
 import de.dennishoersch.util.dropwizard.views.thymeleaf.ScalaThymeleafBundle
-import de.dennishoersch.util.jersey.inject.{OptionFormParamInjectableProvider, OptionQueryParamInjectableProvider}
+import de.dennishoersch.util.dropwizard.{ScalaApplication, ScalaBundle}
+import de.dennishoersch.util.jersey.inject.{OptionFormParamInjectableProvider, OptionQueryParamInjectableProvider, SeqFormParamInjectableProvider, SeqQueryParamInjectableProvider}
+import io.dropwizard.auth.basic.BasicAuthProvider
 import io.dropwizard.setup.{Bootstrap, Environment}
 
 object BlogApplication extends ScalaApplication[BlogConfiguration] {
@@ -17,11 +21,7 @@ object BlogApplication extends ScalaApplication[BlogConfiguration] {
   }
 
   override def run(configuration: BlogConfiguration, environment: Environment) = {
-    for {
-      provider <- Seq(
-        classOf[OptionQueryParamInjectableProvider],
-        classOf[OptionFormParamInjectableProvider])
-    } environment.jersey.register(provider)
+    registerParameterInjectableProvider(environment)
 
     implicit val db = new DB
     implicit val userService = new AccountService
@@ -33,4 +33,12 @@ object BlogApplication extends ScalaApplication[BlogConfiguration] {
     environment.jersey.register(new PostsController)
   }
 
+  private def registerParameterInjectableProvider(environment: Environment) = {
+    for {
+      provider <- Seq(
+        classOf[OptionQueryParamInjectableProvider],
+        classOf[OptionFormParamInjectableProvider],
+        classOf[SeqFormParamInjectableProvider])
+    } environment.jersey.register(provider)
+  }
 }

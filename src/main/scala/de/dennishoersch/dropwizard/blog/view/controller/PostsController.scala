@@ -1,12 +1,14 @@
 package de.dennishoersch.dropwizard.blog.view.controller
 
-import javax.ws.rs.{Consumes, GET, POST, Path, PathParam, Produces}
-import javax.ws.rs.core.MediaType
+import javax.ws.rs._
+import javax.ws.rs.core.{UriInfo, Context, MediaType}
+import java.util.{Collection => JavaCollection, Map => JavaMap}
 
 import de.dennishoersch.dropwizard.blog.domain.Category.Category
-import de.dennishoersch.dropwizard.blog.domain.{Account, Author, Post}
+import de.dennishoersch.dropwizard.blog.domain.{Category, Account, Author, Post}
 import de.dennishoersch.dropwizard.blog.service.PostsService
 import de.dennishoersch.util.dropwizard.views.thymeleaf.ThymeleafView
+import de.dennishoersch.util.resources.Response
 import io.dropwizard.auth.Auth
 
 import scala.collection.JavaConversions._
@@ -53,7 +55,7 @@ class PostsController(implicit val postsService: PostsService) {
   def createNew(@Auth account: Account,
                 @FormParam("title") title: String,
                 @FormParam("content") content: String,
-                @FormParam("categories") category: String,
+                @FormParam("categories") categories: Seq[String],
                 @Context uriInfo: UriInfo) = {
 
     // TODO: Let the user select the categories
@@ -61,7 +63,7 @@ class PostsController(implicit val postsService: PostsService) {
 
     // TODO Scala Seq erlauben wie Option 
 
-    val post = postsService.createPost(account.author, title, content, Category.withName(category))
+    val post = postsService.createPost(account.author, title, content, categories.map(c => Category.withName(c)))
     Response.redirectGet(uriInfo, this, post.id)
   }
 
