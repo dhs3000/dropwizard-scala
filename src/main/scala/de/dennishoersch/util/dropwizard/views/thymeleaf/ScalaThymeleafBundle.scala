@@ -20,6 +20,7 @@ class ScalaThymeleafBundle extends Bundle {
     OgnlRuntime.setPropertyAccessor(classOf[Object], new ScalaObjectPropertyAccessor)
 
     bootstrap.addBundle(new AssetsBundle("/view/css", "/css", null, "css"))
+    bootstrap.addBundle(new AssetsBundle("/view/js", "/js", null, "js"))
     bootstrap.addBundle(new AssetsBundle("/view/images", "/img", null, "images"))
 
     bootstrap.addBundle(new ViewBundle(Seq(DefaultThymeleafViewRenderer)))
