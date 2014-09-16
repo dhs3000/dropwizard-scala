@@ -1,12 +1,9 @@
 package de.dennishoersch.dropwizard.blog.service
 
-import java.time.LocalDateTime
 
-import de.dennishoersch.dropwizard.blog.domain.Author
 import de.dennishoersch.dropwizard.blog.domain.Category._
-import de.dennishoersch.dropwizard.blog.domain.Post
-
-import de.dennishoersch.util.time._
+import de.dennishoersch.dropwizard.blog.domain.{Author, Post}
+import org.joda.time.LocalDateTime
 
 class PostsService(implicit val db: DB) {
 

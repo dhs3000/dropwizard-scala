@@ -8,7 +8,7 @@ apply plugin: 'idea'
 
 apply from: 'build-eclipse.gradle'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 group = 'de.dennishoersch.dropwizard'
 version = '1.0'
@@ -67,8 +67,9 @@ dependencies {
   // https://github.com/erikvanoosten/metrics-scala
   // compoile 'nl.grons:metrics-scala:3.0.4'
 
+  compile 'joda-time:joda-time:2.4'
 
-  // Logging
+    // Logging
   compile 'org.slf4j:jcl-over-slf4j:1.7.7' 
   compile 'ch.qos.logback:logback-classic:1.1.2'
 
