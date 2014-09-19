@@ -1,12 +1,12 @@
-(function( window, $, _ ) {
+(function( window, $ ) {
 
-function MultipleSelect( container ) {
-    _.bindAll( this, 'addSelect', 'selected' );
+function MultipleSelect( originalSelect ) {
 
-    var $container = $( container );
+    var $originalSelect = $( originalSelect );
 
-    this.$select = $container.clone()
-            .removeAttr( "multiple" );
+    this.$select = $originalSelect.clone()
+            .removeAttr( "multiple" )
+            .attr('data-group-id', MultipleSelect.groupSelectCount++);
 
     this.maxSelections = this.$select.find( "option" ).length;
     this.selectionCount = 1;
@@ -14,19 +14,22 @@ function MultipleSelect( container ) {
     this.$addButton = $( '<span role="button" class="icon-button">' +
                          '  <i class="fa fa-plus-circle"></i>' +
                          '</span>' )
-                         .click( this.addButtonClicked ); // TODO: One click handler per document
+                         .click( this.addSelect.bind( this ) );
 
     this.$select.prepend( $( '<option default="default" selected="selected" value="">...</option>' ) );
 
-    $container.replaceWith( this.newSelect().add( this.$addButton ) );
+    $originalSelect.replaceWith( this.newSelect().add( this.$addButton ) );
 }
 
-MultipleSelect.prototype.newSelect = function() {
-    var result = this.$select.clone();
-    result.attr('id', result.attr('id') + "_" + this.selectionCount++);
+MultipleSelect.groupSelectCount = 0;
 
-    result.on('change', this.selected);
-    return result;
+MultipleSelect.prototype.newSelect = function() {
+    var $result = this.$select.clone();
+
+    $result.attr( 'id', $result.attr('id') + "_" + this.selectionCount++ );
+    $result.on( 'change', this.selected.bind( this ) );
+
+    return $result;
 };
 
 MultipleSelect.prototype.addSelect = function( event ) {
@@ -38,11 +41,21 @@ MultipleSelect.prototype.addSelect = function( event ) {
 };
 
 MultipleSelect.prototype.selected = function( event ) {
-    $( event.target ).unbind('change');
+    var $target = $( event.target ),
+        $group = $( 'select[data-group-id="' + $target.data('group-id') + '"]' );
+
+    if ( $target.find( 'option[value!=""]:selected' ).length ) {
+        $target.unbind( 'change' );
+    }
+
+    if ( $group.find( 'option[value!=""]:selected' ).length < $group.length ) {
+        return;
+    }
+
     this.addSelect();
 };
 
 
 window.MultipleSelect = MultipleSelect;
 
-}( window, $, _ ));
+}( window, $ ));
