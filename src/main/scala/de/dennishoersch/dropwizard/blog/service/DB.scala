@@ -1,8 +1,6 @@
 package de.dennishoersch.dropwizard.blog.service
 
-import de.dennishoersch.dropwizard.blog.domain.Account
-import de.dennishoersch.dropwizard.blog.domain.Author
-import de.dennishoersch.dropwizard.blog.domain.Post
+import de.dennishoersch.dropwizard.blog.domain.{PostByDate, Account, Author, Post}
 import de.dennishoersch.util.hashing._
 import de.dennishoersch.util.time._
 import de.dennishoersch.dropwizard.blog.domain.Category._
@@ -72,7 +70,7 @@ class DB {
 
   def allAccounts(): List[Account] = accounts
 
-  def allPosts(): List[Post] = posts.toList
+  def allPosts(): List[Post] = posts.toList.sorted(PostByDate.reverse)
 
   def savePost(post: Post) = {
     posts += post

@@ -14,7 +14,6 @@ import ognl.OgnlRuntime
 object ScalaThymeleafBundle extends ScalaThymeleafBundle
 
 class ScalaThymeleafBundle extends Bundle {
-  // Using ConfiguredBundle?
 
   override def initialize(bootstrap: Bootstrap[_]) {
     OgnlRuntime.setPropertyAccessor(classOf[Object], new ScalaObjectPropertyAccessor)

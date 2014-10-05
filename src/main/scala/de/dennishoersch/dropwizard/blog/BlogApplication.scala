@@ -4,6 +4,7 @@ import de.dennishoersch.dropwizard.blog.auth.AccountAuthenticator
 import de.dennishoersch.dropwizard.blog.service.{AccountService, DB, PostsService}
 import de.dennishoersch.dropwizard.blog.view.controller.{IndexController, PostsController}
 import de.dennishoersch.util.dropwizard.config.RootClasspathConfigurationSourceProvider
+import de.dennishoersch.util.dropwizard.views.jasmine.JasmineTestBundle
 import de.dennishoersch.util.dropwizard.views.thymeleaf.ScalaThymeleafBundle
 import de.dennishoersch.util.dropwizard.{ScalaApplication, ScalaBundle}
 import de.dennishoersch.util.jersey.inject.{OptionFormParamInjectableProvider, OptionQueryParamInjectableProvider, SeqFormParamInjectableProvider, SeqQueryParamInjectableProvider}
@@ -18,6 +19,8 @@ object BlogApplication extends ScalaApplication[BlogConfiguration] {
     bootstrap.setConfigurationSourceProvider(RootClasspathConfigurationSourceProvider)
     bootstrap.addBundle(ScalaBundle)
     bootstrap.addBundle(ScalaThymeleafBundle)
+
+    bootstrap.addBundle(JasmineTestBundle)
   }
 
   override def run(configuration: BlogConfiguration, environment: Environment) = {

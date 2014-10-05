@@ -2,3 +2,7 @@
 select option[default] {
     color: #333;
 }
+
+body.with-js select[multiple="multiple"] {
+    display: none;
+}

@@ -22,9 +22,11 @@ class PostsService(implicit val db: DB) {
   def findAllCategories(): Set[Category] = posts.flatMap(_.categories).toSet
 
   
-  def createPost(author: Author, title: String, content: String): Post = createPost(author, title, content, Uncategorized)
+  def createPost(author: Author, title: String, content: String): Post
+    = createPost(author, title, content, Uncategorized)
   
-  def createPost(author: Author, title: String, content: String, category: Category): Post = createPost(author, title, content, Seq(category))
+  def createPost(author: Author, title: String, content: String, category: Category): Post
+    = createPost(author, title, content, Seq(category))
   
   def createPost(author: Author, title: String, content: String, categories: Seq[Category]): Post = {
     db.savePost(Post(db.nextId, author, LocalDateTime.now, title, content, categories))

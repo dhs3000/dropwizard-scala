@@ -8,7 +8,7 @@ define(["jquery"], function( $ ) {
 
         this.$select = $originalSelect.clone()
                 .removeAttr( "multiple" )
-                .attr('data-group-id', MultipleSelect.groupSelectCount++);
+                .attr( 'data-group-id', MultipleSelect.groupId( originalSelect ) );
 
         this.maxSelections = this.$select.find( "option" ).length;
         this.selectionCount = 1;
@@ -24,6 +24,13 @@ define(["jquery"], function( $ ) {
     }
 
     MultipleSelect.groupSelectCount = 0;
+    MultipleSelect.groupId = function( originalSelect ) {
+        var id = originalSelect.id;
+        if ( id ) {
+            return id;
+        }
+        return MultipleSelect.groupSelectCount++;
+    };
 
     MultipleSelect.prototype.newSelect = function() {
         var $result = this.$select.clone();
@@ -37,7 +44,8 @@ define(["jquery"], function( $ ) {
     MultipleSelect.prototype.addSelect = function( event ) {
         this.newSelect().insertBefore( this.$addButton );
         if ( this.selectionCount > this.maxSelections ) {
-            this.$addButton.hide();
+            this.$addButton.remove();
+            this.$addButton = undefined;
             this.addSelect = function() {};
         }
     };
