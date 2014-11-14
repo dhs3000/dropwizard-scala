@@ -21,69 +21,60 @@ import javax.servlet.http.HttpServletResponse
 import com.google.common.io.Resources
 import com.google.common.net.HttpHeaders
 import de.dennishoersch.util.AutoClosables._
-import de.dennishoersch.util.guava._
 import de.dennishoersch.util.logging.Logging
 
-trait Asset {
-  def respond(implicit response: HttpServletResponse): Unit
+private[assets] object Asset {
+  def apply(assetPath: Option[URL], mediaType: MediaTypeSetter, useCaching: Boolean): Asset =
+    assetPath
+      .map(asAsset(_, mediaType, useCaching))
+      .getOrElse(NotFoundAsset)
+
+  private def asAsset(assetPath: URL, mediaType: MediaTypeSetter, useCaching: Boolean) =
+    new DefaultAsset(assetPath, mediaType, modifyResponseFor(useCaching))
+
+  private def modifyResponseFor(useCaching: Boolean) = if (useCaching) Caching else NotCaching
 }
 
-private[assets] object Asset {
-  def apply(assetPath: Option[URL], mediaType: MediaType, caching: Boolean): Asset = {
-
-    def asAsset(assetPath: URL) =
-      if (caching) new CachedAsset(assetPath, mediaType)
-      else new NotCachedAsset(assetPath, mediaType)
-
-    assetPath.map(asAsset).getOrElse(NotFoundAsset)
-  }
+trait Asset {
+  def respond(response: HttpServletResponse)
 }
 
 private[assets] object NotFoundAsset extends Asset {
-  override def respond(implicit response: HttpServletResponse): Unit =
+  override def respond(response: HttpServletResponse): Unit =
     response.sendError(HttpServletResponse.SC_NOT_FOUND)
 }
 
-private[assets] sealed abstract class AbstractAsset(
+trait ResponseModifier {
+  def modify(currentDateMilliseconds: Long, response: HttpServletResponse)
+}
+
+private[assets] class DefaultAsset(
     assetPath: URL,
-    mediaType: MediaType)
+    responseModifier: ResponseModifier*)
   extends Asset
-  with Logging {
+    with Logging {
 
   private final val asset = Resources.toByteArray(assetPath)
 
-  override def respond(implicit response: HttpServletResponse): Unit = {
-    setHeaders()
-    writeData()
+  final def respond(response: HttpServletResponse): Unit = {
+    val currentDateMilliseconds = System.currentTimeMillis
+    setDefaultHeaders(currentDateMilliseconds, response)
+    responseModifier.foreach(_.modify(currentDateMilliseconds, response))
+    writeData(response)
   }
 
-  protected final val currentDateMilliseconds = System.currentTimeMillis
-
-  private def setHeaders()(implicit response: HttpServletResponse): Unit = {
-    val md = mediaType.get
-    response.setContentType(s"${md.`type`}/${md.subtype}")
-    md.charset.foreach(c => response.setCharacterEncoding(c.toString))
-
+  private def setDefaultHeaders(currentDateMilliseconds: Long, response: HttpServletResponse): Unit = {
     response.setDateHeader(HttpHeaders.DATE, currentDateMilliseconds)
-    setCacheHeaders()
   }
 
-  protected def setCacheHeaders()(implicit response: HttpServletResponse): Unit
-
-  private def writeData()(implicit response: HttpServletResponse): Unit =
+  private def writeData(response: HttpServletResponse): Unit =
     tryWith(response.getOutputStream) { out =>
       out.write(asset)
     }
 }
 
-private[assets] class NotCachedAsset(
-    assetPath: URL,
-    mediaType: MediaType)
-  extends AbstractAsset(
-    assetPath,
-    mediaType) {
-
-  override def setCacheHeaders()(implicit response: HttpServletResponse): Unit = {
+private object NotCaching extends ResponseModifier {
+  override def modify(currentDateMilliseconds: Long, response: HttpServletResponse): Unit = {
     response.setDateHeader(HttpHeaders.EXPIRES, 0)
     response.setHeader(HttpHeaders.PRAGMA, "no-cache")
     response.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
@@ -92,16 +83,12 @@ private[assets] class NotCachedAsset(
   }
 }
 
-private[assets] class CachedAsset(
-    assetPath: URL,
-    mediaType: MediaType)
-  extends AbstractAsset(
-    assetPath,
-    mediaType) {
+private object Caching extends ResponseModifier {
+  private val maxAgeSeconds: Long = 364 * 24 * 60 * 60
+  private val maxAgeMilliseconds: Long = maxAgeSeconds * 1000
+  private val maxAgeHeader = s"max-age=$maxAgeSeconds"
 
-  import de.dennishoersch.util.assets.CachedAsset._
-
-  override def setCacheHeaders()(implicit response: HttpServletResponse): Unit = {
+  override def modify(currentDateMilliseconds: Long, response: HttpServletResponse): Unit = {
     response.setDateHeader(HttpHeaders.EXPIRES, currentDateMilliseconds + maxAgeMilliseconds)
     response.setHeader(HttpHeaders.PRAGMA, "cache")
     response.setHeader(HttpHeaders.CACHE_CONTROL, "public")
@@ -109,10 +96,5 @@ private[assets] class CachedAsset(
   }
 }
 
-private object CachedAsset {
-  final val maxAgeSeconds: Long = 364 * 24 * 60 * 60
-  final val maxAgeMilliseconds: Long = maxAgeSeconds * 1000
-  final val maxAgeHeader = s"max-age=$maxAgeSeconds"
-}
 
 

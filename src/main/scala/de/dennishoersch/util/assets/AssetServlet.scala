@@ -59,7 +59,7 @@ class AssetServlet(
   private def withAssetFor(request: HttpServletRequest): Asset = {
     val key = request.fullPath
     require(key.startsWith(baseUrlPath))
-    Asset(requestedAssetPath(key), MediaType(request), useCaching)
+    Asset(requestedAssetPath(key), MediaTypeSetter(request), useCaching)
   }
 
   private def requestedAssetPath(key: String): Option[URL] = {

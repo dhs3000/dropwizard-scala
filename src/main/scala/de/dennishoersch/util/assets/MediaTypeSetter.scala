@@ -15,24 +15,31 @@
  */
 package de.dennishoersch.util.assets
 
-import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.google.common.base.Charsets
-import com.google.common.net.{MediaType => GuavaMediaType}
+import com.google.common.net.MediaType
+import de.dennishoersch.util.guava._
 import de.dennishoersch.util.logging.Logging
 
 import scala.util.{Failure, Success, Try}
 
-class MediaType(request: HttpServletRequest) extends Logging {
+class MediaTypeSetter(request: HttpServletRequest) extends ResponseModifier with Logging {
 
-  private final val defaultMediaType = GuavaMediaType.HTML_UTF_8
+  private final val defaultMediaType = MediaType.HTML_UTF_8
   private final val defaultCharset = Charsets.UTF_8
 
-  def get: GuavaMediaType = {
+  override def modify(currentDateMilliseconds: Long, response: HttpServletResponse): Unit = {
+    val mediaType = getMediatype
+    response.setContentType(s"${mediaType.`type`}/${mediaType.subtype}")
+    mediaType.charset.foreach(c => response.setCharacterEncoding(c.toString))
+  }
+
+  private def getMediatype: MediaType = {
     def fromMimeType(mimeType: String) =
       Try {
-        val mediaType = GuavaMediaType.parse(mimeType)
-        if (mediaType.is(GuavaMediaType.ANY_TEXT_TYPE))
+        val mediaType = MediaType.parse(mimeType)
+        if (mediaType.is(MediaType.ANY_TEXT_TYPE))
           mediaType.withCharset(defaultCharset)
         else
           mediaType
@@ -49,6 +56,6 @@ class MediaType(request: HttpServletRequest) extends Logging {
   }
 }
 
-object MediaType {
-  def apply(request: HttpServletRequest) = new MediaType(request)
+object MediaTypeSetter {
+  def apply(request: HttpServletRequest) = new MediaTypeSetter(request)
 }
