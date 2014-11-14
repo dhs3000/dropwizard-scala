@@ -39,13 +39,13 @@ class AssetsBundle private(
 object AssetsBundle {
 
   def apply(name: String, resourcePath: String, uriPath: String): AssetsBundle =
-    apply(name, resourcePath, uriPath, None, caching = true)
+    apply(name, resourcePath, uriPath, None, useCaching = true)
 
-  def apply(name: String, resourcePath: String, uriPath: String, indexFile: String, caching: Boolean): AssetsBundle =
-    apply(name, resourcePath, uriPath, Some(indexFile), caching)
+  def apply(name: String, resourcePath: String, uriPath: String, indexFile: String, useCaching: Boolean): AssetsBundle =
+    apply(name, resourcePath, uriPath, Some(indexFile), useCaching)
 
-  def apply(name: String, resourcePath: String, uriPath: String, indexFile: Option[String], caching: Boolean): AssetsBundle =
-    new AssetsBundle(name, addSlash(resourcePath), addSlash(uriPath), indexFile, caching)
+  def apply(name: String, resourcePath: String, uriPath: String, indexFile: Option[String], useCaching: Boolean): AssetsBundle =
+    new AssetsBundle(name, addSlash(resourcePath), addSlash(uriPath), indexFile, useCaching)
 
   private def addSlash(path: String) = if (path.endsWith("/")) path else path + '/'
 }

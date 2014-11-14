@@ -16,46 +16,41 @@
 package de.dennishoersch.util.assets
 
 import java.net.URL
-import java.nio.charset.Charset
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import javax.servlet.http.HttpServletResponse
 
-import com.google.common.base.Charsets
-import com.google.common.hash.Hashing
 import com.google.common.io.Resources
-import com.google.common.net.{HttpHeaders, MediaType}
+import com.google.common.net.HttpHeaders
 import de.dennishoersch.util.AutoClosables._
 import de.dennishoersch.util.guava._
 import de.dennishoersch.util.logging.Logging
-import io.dropwizard.servlets.assets.ResourceURL
-
-import scala.util.{Failure, Success, Try}
 
 trait Asset {
   def respond(implicit response: HttpServletResponse): Unit
 }
 
-object Asset {
-  def apply(assetUrl: Option[URL], mediaType: MediaType, caching: Boolean): Asset = {
+private[assets] object Asset {
+  def apply(assetPath: Option[URL], mediaType: MediaType, caching: Boolean): Asset = {
 
-    def toAsset(assetUrl: URL) =
-      if (caching) new CachedAsset(assetUrl, mediaType)
-      else new NotCachedAsset(assetUrl, mediaType)
+    def asAsset(assetPath: URL) =
+      if (caching) new CachedAsset(assetPath, mediaType)
+      else new NotCachedAsset(assetPath, mediaType)
 
-    assetUrl.map(toAsset).getOrElse(NotFoundAsset)
+    assetPath.map(asAsset).getOrElse(NotFoundAsset)
   }
 }
 
-object NotFoundAsset extends Asset {
-  override def respond(implicit response: HttpServletResponse): Unit = response.sendError(HttpServletResponse.SC_NOT_FOUND)
+private[assets] object NotFoundAsset extends Asset {
+  override def respond(implicit response: HttpServletResponse): Unit =
+    response.sendError(HttpServletResponse.SC_NOT_FOUND)
 }
 
-sealed abstract class AbstractAsset(
-    resourceUrl: URL,
+private[assets] sealed abstract class AbstractAsset(
+    assetPath: URL,
     mediaType: MediaType)
   extends Asset
   with Logging {
 
-  private final val resource = Resources.toByteArray(resourceUrl)
+  private final val asset = Resources.toByteArray(assetPath)
 
   override def respond(implicit response: HttpServletResponse): Unit = {
     setHeaders()
@@ -77,15 +72,15 @@ sealed abstract class AbstractAsset(
 
   private def writeData()(implicit response: HttpServletResponse): Unit =
     tryWith(response.getOutputStream) { out =>
-      out.write(resource)
+      out.write(asset)
     }
 }
 
-final class NotCachedAsset(
-    resourceUrl: URL,
+private[assets] class NotCachedAsset(
+    assetPath: URL,
     mediaType: MediaType)
   extends AbstractAsset(
-    resourceUrl,
+    assetPath,
     mediaType) {
 
   override def setCacheHeaders()(implicit response: HttpServletResponse): Unit = {
@@ -97,14 +92,14 @@ final class NotCachedAsset(
   }
 }
 
-final class CachedAsset(
-    resourceUrl: URL,
+private[assets] class CachedAsset(
+    assetPath: URL,
     mediaType: MediaType)
   extends AbstractAsset(
-    resourceUrl,
+    assetPath,
     mediaType) {
 
-  import CachedAsset._
+  import de.dennishoersch.util.assets.CachedAsset._
 
   override def setCacheHeaders()(implicit response: HttpServletResponse): Unit = {
     response.setDateHeader(HttpHeaders.EXPIRES, currentDateMilliseconds + maxAgeMilliseconds)
@@ -114,7 +109,7 @@ final class CachedAsset(
   }
 }
 
-object CachedAsset {
+private object CachedAsset {
   final val maxAgeSeconds: Long = 364 * 24 * 60 * 60
   final val maxAgeMilliseconds: Long = maxAgeSeconds * 1000
   final val maxAgeHeader = s"max-age=$maxAgeSeconds"

@@ -28,7 +28,7 @@ object JasmineTestBundle extends Bundle {
         resourcePath = "/view/specs",
         uriPath = "/specs",
         indexFile = "index.html",
-        caching = false))
+        useCaching = false))
   }
 
   override def run(environment: Environment) {

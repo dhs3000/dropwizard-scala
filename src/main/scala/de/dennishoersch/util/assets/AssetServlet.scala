@@ -27,24 +27,24 @@ import io.dropwizard.servlets.assets.ResourceURL
 import scala.util.Try
 
 class AssetServlet(
-    _resourcePath: String,
-    _uriPath: String,
+    _baseAssetsPath: String,
+    _baseUrlPath: String,
     indexFile: Option[String],
-    caching: Boolean)
+    useCaching: Boolean)
   extends HttpServlet
   with Logging {
 
 
   private val slashes = CharMatcher.is('/')
 
-  private val resourcePath = {
-    val trimmedPath = trimSlashes(_resourcePath)
-    if (trimmedPath.isEmpty) "" else s"$trimmedPath/"
+  private val baseAssetsPath = {
+    val result = trimSlashes(_baseAssetsPath)
+    if (result.isEmpty) "" else s"$result/"
   }
 
-  private val uriPath = {
-    val trimmedUri = trimSlashes(_uriPath)
-    s"/$trimmedUri"
+  private val baseUrlPath = {
+    val result = trimSlashes(_baseUrlPath)
+    s"/$result"
   }
 
   protected override def doGet(request: HttpServletRequest, response: HttpServletResponse) =
@@ -58,11 +58,11 @@ class AssetServlet(
 
   private def withAssetFor(request: HttpServletRequest): Asset = {
     val key = request.fullPath
-    require(key.startsWith(uriPath))
-    Asset(requestedAssetUrl(key), MediaType(request), caching)
+    require(key.startsWith(baseUrlPath))
+    Asset(requestedAssetPath(key), MediaType(request), useCaching)
   }
 
-  private def requestedAssetUrl(key: String): Option[URL] = {
+  private def requestedAssetPath(key: String): Option[URL] = {
     val absolutePath = absoluteAssetPath(key)
     val result = Resources.getResource(absolutePath)
     if (ResourceURL.isDirectory(result))
@@ -72,9 +72,10 @@ class AssetServlet(
   }
 
   private def absoluteAssetPath(key: String) = {
-    val requestedResourcePath = trimSlashes(key.substring(uriPath.length))
-    trimSlashes(resourcePath + requestedResourcePath)
+    val requestedResourcePath = trimSlashes(key.substring(baseUrlPath.length))
+    trimSlashes(baseAssetsPath + requestedResourcePath)
   }
 
+  @inline
   private def trimSlashes(s: String) = slashes.trimFrom(s)
 }
