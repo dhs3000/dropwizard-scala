@@ -74,7 +74,7 @@ dependencies {
   compile 'ch.qos.logback:logback-classic:1.1.2'
 
   testCompile 'junit:junit:4.+'
-  testCompile 'org.scalatest:scalatest_2.11:+'
+  testCompile 'org.scalatest:scalatest_2.11:2.2.2'
   
   testCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
   testCompile "org.thymeleaf:thymeleaf-testing:$thymeleafVersion"
