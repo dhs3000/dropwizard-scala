@@ -15,7 +15,7 @@
  */
 package de.dennishoersch.util.dropwizard.views.jasmine
 
-import de.dennishoersch.util.dropwizard.assets.AssetsBundle
+import de.dennishoersch.util.assets.AssetsBundle
 import io.dropwizard.Bundle
 import io.dropwizard.setup.{Bootstrap, Environment}
 

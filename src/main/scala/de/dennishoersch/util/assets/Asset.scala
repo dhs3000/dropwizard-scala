@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dennishoersch.util.dropwizard.assets
+package de.dennishoersch.util.assets
 
 import java.net.URL
 import java.nio.charset.Charset

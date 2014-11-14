@@ -1,6 +1,6 @@
 package de.dennishoersch.util.dropwizard.views.thymeleaf
 
-import de.dennishoersch.util.dropwizard.assets.AssetsBundle
+import de.dennishoersch.util.assets.AssetsBundle
 
 import scala.collection.JavaConversions._
 

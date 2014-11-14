@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.dennishoersch.util.dropwizard.assets
+package de.dennishoersch.util.assets
 
 import io.dropwizard.Bundle
 import io.dropwizard.setup.{Environment, Bootstrap}
