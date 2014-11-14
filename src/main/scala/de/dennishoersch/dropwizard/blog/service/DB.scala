@@ -13,8 +13,8 @@ class DB {
   def nextId() = currentId.incrementAndGet()
 
   private val authors = List(
-    Author(nextId(), "Dennse Hi", "/img/avatar/dennse.png"),
-    Author(nextId(), "Manni Mempfer", "/img/avatar/manni.png"))
+    Author(nextId(), "Dennse Hi", "/images/avatar/dennse.png"),
+    Author(nextId(), "Manni Mempfer", "/images/avatar/manni.png"))
 
   private val accounts = List(
     Account(nextId(), "dennis", "secret".asSHA256, authors(0)),
