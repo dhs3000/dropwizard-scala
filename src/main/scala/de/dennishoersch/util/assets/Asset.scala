@@ -49,10 +49,10 @@ trait ResponseModifier {
 }
 
 private[assets] class DefaultAsset(
-    assetPath: URL,
-    responseModifier: ResponseModifier*)
+  assetPath: URL,
+  responseModifier: ResponseModifier*)
   extends Asset
-    with Logging {
+  with Logging {
 
   private final val asset = Resources.toByteArray(assetPath)
 

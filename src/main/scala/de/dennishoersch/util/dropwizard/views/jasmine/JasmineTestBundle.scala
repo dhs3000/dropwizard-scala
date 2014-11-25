@@ -16,21 +16,20 @@
 package de.dennishoersch.util.dropwizard.views.jasmine
 
 import de.dennishoersch.util.assets.AssetsBundle
-import io.dropwizard.Bundle
+import de.dennishoersch.util.dropwizard.config.{ConfiguredBundle, DeploymentConfiguration}
 import io.dropwizard.setup.{Bootstrap, Environment}
 
-object JasmineTestBundle extends Bundle {
+object JasmineTestBundle extends ConfiguredBundle[DeploymentConfiguration] {
 
-  override def initialize(bootstrap: Bootstrap[_]) {
+  override def init(bootstrap: Bootstrap[DeploymentConfiguration]) {
     bootstrap.addBundle(
       AssetsBundle(
         name = "specs",
         resourcePath = "/view/specs",
         uriPath = "/specs",
-        indexFile = "index.html",
-        useCaching = false))
+        indexFile = "index.html"))
   }
 
-  override def run(environment: Environment) {
+  override def run(configuration: DeploymentConfiguration, environment: Environment) {
   }
 }

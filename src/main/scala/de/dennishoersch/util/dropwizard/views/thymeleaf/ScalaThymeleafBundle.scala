@@ -1,6 +1,7 @@
 package de.dennishoersch.util.dropwizard.views.thymeleaf
 
 import de.dennishoersch.util.assets.AssetsBundle
+import de.dennishoersch.util.dropwizard.config.{DeploymentConfiguration, ConfiguredBundle}
 
 import scala.collection.JavaConversions._
 
@@ -14,9 +15,9 @@ import ognl.OgnlRuntime
 
 object ScalaThymeleafBundle extends ScalaThymeleafBundle
 
-class ScalaThymeleafBundle extends Bundle {
+class ScalaThymeleafBundle extends ConfiguredBundle[DeploymentConfiguration] {
 
-  override def initialize(bootstrap: Bootstrap[_]) {
+  override def init(bootstrap: Bootstrap[DeploymentConfiguration]) {
     OgnlRuntime.setPropertyAccessor(classOf[Object], new ScalaObjectPropertyAccessor)
 
     for (assetsBundle <- Seq(
@@ -38,6 +39,6 @@ class ScalaThymeleafBundle extends Bundle {
     bootstrap.addBundle(new ViewBundle(Seq(DefaultThymeleafViewRenderer)))
   }
 
-  override def run(environment: Environment) {
+  override def run(configuration: DeploymentConfiguration, environment: Environment) {
   }
 }

@@ -15,8 +15,9 @@
  */
 package de.dennishoersch.dropwizard.blog
 
+import de.dennishoersch.util.dropwizard.config.DeploymentConfiguration
 import io.dropwizard.Configuration
 
-class BlogConfiguration extends Configuration {
+class BlogConfiguration extends Configuration with DeploymentConfiguration {
 
 }
