@@ -22,11 +22,12 @@ import de.dennishoersch.util.dropwizard.config.RootClasspathConfigurationSourceP
 import de.dennishoersch.util.dropwizard.views.jasmine.JasmineTestBundle
 import de.dennishoersch.util.dropwizard.views.thymeleaf.ScalaThymeleafBundle
 import de.dennishoersch.util.dropwizard.{ScalaApplication, ScalaBundle}
-import de.dennishoersch.util.jersey.inject.{OptionFormParamInjectableProvider, OptionQueryParamInjectableProvider, SeqFormParamInjectableProvider, SeqQueryParamInjectableProvider}
+import de.dennishoersch.util.jersey.inject.{OptionFormParamInjectableProvider, OptionQueryParamInjectableProvider, SeqFormParamInjectableProvider}
+import de.dennishoersch.util.logging.Logging
 import io.dropwizard.auth.basic.BasicAuthProvider
 import io.dropwizard.setup.{Bootstrap, Environment}
 
-object BlogApplication extends ScalaApplication[BlogConfiguration] {
+object BlogApplication extends ScalaApplication[BlogConfiguration] with Logging {
 
   override def getName = "blog-application"
 
@@ -35,10 +36,23 @@ object BlogApplication extends ScalaApplication[BlogConfiguration] {
     bootstrap.addBundle(ScalaBundle)
     bootstrap.addBundle(ScalaThymeleafBundle)
 
+    // TODO bundle nur in development hinzufuegen
     bootstrap.addBundle(JasmineTestBundle)
   }
 
+  private def logDevelopmentStart(configuration: BlogConfiguration) = if (configuration.deployment.isDevelopment) {
+    logger.warn(String.format(
+      "%n" +
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%n" +
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%n" +
+        "!              THIS APPLICATION IS STARTED IN DEVELOPMENT MODE                 !%n" +
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%n" +
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    ))
+  }
+
   override def run(configuration: BlogConfiguration, environment: Environment) = {
+    logDevelopmentStart(configuration)
     registerParameterInjectableProvider(environment)
 
     implicit val db = new DB

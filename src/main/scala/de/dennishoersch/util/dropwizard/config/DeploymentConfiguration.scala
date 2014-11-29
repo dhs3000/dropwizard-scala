@@ -44,6 +44,7 @@ class Deployent {
   def mode: DeploymentMode = _mode
 
   def isProduction: Boolean = mode == Production
+  def isDevelopment: Boolean = !isProduction
 }
 
 sealed case class DeploymentMode(mode: String)
