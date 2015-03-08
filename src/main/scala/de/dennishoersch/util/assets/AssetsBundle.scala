@@ -15,11 +15,7 @@
  */
 package de.dennishoersch.util.assets
 
-import java.util
-import javax.servlet.DispatcherType
-
 import de.dennishoersch.util.dropwizard.config.DeploymentConfiguration
-import de.dennishoersch.util.servlet.VersionFilter
 import io.dropwizard.ConfiguredBundle
 import io.dropwizard.setup.{Bootstrap, Environment}
 
