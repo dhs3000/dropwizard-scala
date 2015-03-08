@@ -15,15 +15,15 @@
  */
 package de.dennishoersch.util.dropwizard.config
 
-import java.io.InputStream
+import java.io.{IOException, InputStream}
 
 import io.dropwizard.configuration.ConfigurationSourceProvider
 
 object RootClasspathConfigurationSourceProvider extends RootClasspathConfigurationSourceProvider
 
 sealed class RootClasspathConfigurationSourceProvider extends ConfigurationSourceProvider {
-  
-  def open(path: String): InputStream = {
-    this.getClass.getResourceAsStream(s"/$path")
-  }
+
+  def open(path: String): InputStream =
+    Option(this.getClass.getResourceAsStream(s"/$path"))
+      .getOrElse(throw new IOException(s"Can not find /$path in classpath!"))
 }

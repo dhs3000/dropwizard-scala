@@ -15,8 +15,12 @@
  */
 package de.dennishoersch.util.assets
 
+import java.util
+import javax.servlet.DispatcherType
+
 import de.dennishoersch.util.dropwizard.config.DeploymentConfiguration
-import io.dropwizard.{Configuration, ConfiguredBundle}
+import de.dennishoersch.util.servlet.VersionFilter
+import io.dropwizard.ConfiguredBundle
 import io.dropwizard.setup.{Bootstrap, Environment}
 
 class AssetsBundle private(
@@ -29,11 +33,12 @@ class AssetsBundle private(
 
   override def initialize(bootstrap: Bootstrap[_]): Unit = {}
 
-  override def run(configuration: DeploymentConfiguration, environment: Environment): Unit =
+  override def run(configuration: DeploymentConfiguration, environment: Environment): Unit = {
     if (shouldAdd(configuration))
       environment.servlets
         .addServlet(name, new AssetServlet(resourcePath, uriPath, indexFile, useCaching = configuration.deployment.isProduction))
         .addMapping(s"$uriPath*")
+  }
 }
 
 object AssetsBundle {

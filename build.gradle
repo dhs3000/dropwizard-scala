@@ -16,7 +16,7 @@ version = '1.0'
 mainClassName = 'de.dennishoersch.dropwizard.blog.BlogApplication'
 
 run {
-    args 'server', 'contacts.yml'
+    args 'server', 'blog.yml'
 }
 
 // oder: http://www.objectpartners.com/2013/07/16/creating-self-contained-executable-jars-with-gradle-and-shadow/
@@ -36,10 +36,6 @@ jar {
             exclude 'META-INF/*.RSA'
         }
     }
-}
-
-compileScala {
-    scalaCompileOptions.useCompileDaemon = true
 }
 
 repositories {
@@ -73,7 +69,10 @@ dependencies {
   compile 'org.slf4j:jcl-over-slf4j:1.7.7' 
   compile 'ch.qos.logback:logback-classic:1.1.2'
 
-  testCompile 'junit:junit:4.+'
+  compile 'org.apache.tomcat:tomcat-catalina:8.0.18'
+
+
+    testCompile 'junit:junit:4.+'
   testCompile 'org.scalatest:scalatest_2.11:2.2.2'
   
   testCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"

@@ -24,7 +24,7 @@ import de.dennishoersch.util.dropwizard.auth.Authenticator
 class AccountAuthenticator(implicit accountService: AccountService) extends Authenticator[BasicCredentials, Account] {
 
   override def auth(credentials: BasicCredentials): Option[Account] = {
-    accountService.findByUsername(credentials.getUsername())
-      .filter(_.isPasswordValid(credentials.getPassword()))
+    accountService.findByUsername(credentials.getUsername)
+      .filter(_.isPasswordValid(credentials.getPassword))
   }
 }
